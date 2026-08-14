@@ -1,0 +1,47 @@
+name: Deploy qtonzgames.com ads.txt
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "domians/qtonzgames.com/ads.txt"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.QTONZ_SSH_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.QTONZ_PORT }} ${{ secrets.QTONZ_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Verify SSH connection
+        run: |
+          ssh \
+            -p ${{ secrets.QTONZ_PORT }} \
+            ${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }} \
+            "echo 'SSH connection successful'"
+
+      - name: Deploy ads.txt
+        run: |
+          scp \
+            -P ${{ secrets.QTONZ_PORT }} \
+            "domians/qtonzgames.com/ads.txt" \
+            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}:/public_html/ads.txt"
+
+      - name: Verify deployed file
+        run: |
+          ssh \
+            -p ${{ secrets.QTONZ_PORT }} \
+            ${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }} \
+            "ls -l /public_html/ads.txt && echo 'ads.txt deployment successful'"

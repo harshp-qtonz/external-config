@@ -15,33 +15,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.QTONZ_SSH_KEY }}
 
-      - name: Add server to known_hosts
+      - name: Setup known_hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p ${{ secrets.QTONZ_PORT }} ${{ secrets.QTONZ_HOST }} >> ~/.ssh/known_hosts
+          chmod 700 ~/.ssh
 
-      - name: Verify SSH connection
+          echo "${{ secrets.QTONZ_KNOWN_HOST }}" > ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Verify SSH
         run: |
           ssh \
-            -p ${{ secrets.QTONZ_PORT }} \
-            ${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }} \
+            -p "${{ secrets.QTONZ_PORT }}" \
+            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}" \
             "echo 'SSH connection successful'"
 
       - name: Deploy ads.txt
         run: |
           scp \
-            -P ${{ secrets.QTONZ_PORT }} \
+            -P "${{ secrets.QTONZ_PORT }}" \
             "domians/qtonzgames.com/ads.txt" \
-            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}:/home/u161747808/public_html/ads1.txt"
+            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}:/home/u161747808public_html/ads1.txt"
 
-      - name: Verify deployed file
+      - name: Verify deployment
         run: |
           ssh \
-            -p ${{ secrets.QTONZ_PORT }} \
-            ${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }} \
-            "ls -l /home/u161747808/public_html/ads1.txt && echo 'ads.txt deployment successful'"
+            -p "${{ secrets.QTONZ_PORT }}" \
+            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}" \
+            "ls -lh /home/u161747808public_html/ads1.txt"

@@ -1484,5 +1484,3 @@ pubnative.net, 1006576, RESELLER, d641df8625486a7b
 verve.com, 15503, RESELLER, 0c8f5958fc2d6270
 
 appbroda.com, 1625, DIRECT
-
-#test ads1

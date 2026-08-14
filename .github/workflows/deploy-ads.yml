@@ -37,7 +37,7 @@ jobs:
           scp \
             -P ${{ secrets.QTONZ_PORT }} \
             "domians/qtonzgames.com/ads.txt" \
-            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}:/public_html/ads.txt"
+            "${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }}:/home/u161747808/public_html/ads1.txt"
 
       - name: Verify deployed file
         run: |

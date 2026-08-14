@@ -44,4 +44,4 @@ jobs:
           ssh \
             -p ${{ secrets.QTONZ_PORT }} \
             ${{ secrets.QTONZ_USER }}@${{ secrets.QTONZ_HOST }} \
-            "ls -l /public_html/ads.txt && echo 'ads.txt deployment successful'"
+            "ls -l /home/u161747808/public_html/ads1.txt && echo 'ads.txt deployment successful'"
